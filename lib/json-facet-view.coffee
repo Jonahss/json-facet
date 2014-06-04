@@ -4,7 +4,6 @@ module.exports =
 class JsonFacetView extends ScrollView
   @content: ->
     @div class: 'json-facet', =>
-      @div "hi", class: "message"
 
   initialize: (serializeState) ->
 
@@ -28,24 +27,42 @@ class JsonFacetView extends ScrollView
     "JSON"
 
   renderJSON: (jsonData) ->
-    subItem = (name, val) ->
-      if name
-        data = $('<div>#{name}</div>')
-      else
-        data = $('<div></div>')
+    string = (val) ->
+      $("<div class='string'>#{val}</div>")
+    number = (val) ->
+      $("<div class='number'>#{val}</div>")
+    boolean = (val) ->
+      $("<div class='boolean'>#{val}</div>")
+    nulll = ->
+      $("<div class='null'>null</div>")
+    array = (val) ->
+      el = $("<div class='array'></div>")
+      val.forEach (item) ->
+        el.append value(item)
+      return el
+    object = (val) ->
+      el = $("<div class='object'></div>")
+      Object.keys(val).forEach (key) ->
+        el.append pair(key, val[key])
+      return el
 
-      if val == null
-        data.append($('<div>null</div>'))
+    value = (val) ->
+      if typeof val == 'number'
+        return number(val)
+      else if typeof val == 'string'
+        return string(val)
+      else if typeof val == 'boolean'
+        return boolean(val)
       else if val instanceof Array
-        val.forEach (item) ->
-          data.append($('<div>#{item}</div>'))
+        return array(val)
       else if val instanceof Object
-        Object.keys(val).forEach (key) ->
-          data.append(subItem(key, val[key]))
+        return object(val)
       else
-        data.append($('<div>#{val}</div>'))
+        return nulll()
 
-      return data
+    pair = (name, val) ->
+      el = $("<div class=pair><span>#{name}</span></div>")
+      el.append value(val)
+      return el
 
-    Object.keys(jsonData).forEach (key) ->
-      this.append(subItem(key, jsonData[key]))
+    this.append object(jsonData)
