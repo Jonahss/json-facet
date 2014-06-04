@@ -1,0 +1,16 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  '.overlayer':
+      'Enable json-facet': 'json-facet:toggle'
+
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'json-facet'
+      'submenu': [
+        { 'label': 'Toggle', 'command': 'json-facet:toggle' }
+      ]
+    ]
+  }
+]
