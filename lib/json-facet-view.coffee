@@ -28,13 +28,13 @@ class JsonFacetView extends ScrollView
 
   renderJSON: (jsonData) ->
     string = (val) ->
-      $("<div class='string'>#{val}</div>")
+      $("<span class='string'>#{val}</span>")
     number = (val) ->
-      $("<div class='number'>#{val}</div>")
+      $("<span class='number'>#{val}</span>")
     boolean = (val) ->
-      $("<div class='boolean'>#{val}</div>")
+      $("<span class='boolean'>#{val}</span>")
     nulll = ->
-      $("<div class='null'>null</div>")
+      $("<span class='null'>null</span>")
     array = (val) ->
       el = $("<div class='array'></div>")
       val.forEach (item) ->
