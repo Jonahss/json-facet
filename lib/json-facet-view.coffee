@@ -3,7 +3,7 @@
 module.exports =
 class JsonFacetView extends ScrollView
   @content: ->
-    @div class: 'json-facet', =>
+    @div class: 'json-facet native-key-bindings', tabindex: -1
 
   initialize: (serializeState) ->
 
@@ -17,6 +17,9 @@ class JsonFacetView extends ScrollView
   constructor: (editorId) ->
     console.log 'editor id', editorId
     super
+
+    @subscribe this, 'core:move-up', => @scrollUp()
+    @subscribe this, 'core:move-down', => @scrollDown()
 
     getEditor: () ->
       for editor in atom.workspace.getEditors()
