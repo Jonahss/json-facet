@@ -65,4 +65,4 @@ class JsonFacetView extends ScrollView
       el.append value(val)
       return el
 
-    this.append object(jsonData)
+    this.append object(jsonData) # adds the entire object to the view

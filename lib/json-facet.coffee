@@ -50,5 +50,7 @@ module.exports =
     previousActivePane = atom.workspace.getActivePane()
     atom.workspace.open(uri, split: 'right', searchAllPanes: true).done (jsonFacetView) ->
       if jsonFacetView instanceof JsonFacetView
-        jsonFacetView.renderJSON(JSON.parse(editor.buffer.getText()))
+        var text = editor.buffer.getText()     # gets text in file
+        var JSONdata = JSON.parse(text)        # gets text as a javascript object
+        jsonFacetView.renderJSON(JSONdata)     # sends to the view
         previousActivePane.activate()
