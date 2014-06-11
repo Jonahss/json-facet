@@ -2,6 +2,7 @@
 
 module.exports =
 class JsonFacetView extends ScrollView
+  editorId = null
   @content: ->
     @div class: 'json-facet native-key-bindings', tabindex: -1
 
@@ -16,20 +17,29 @@ class JsonFacetView extends ScrollView
 
   constructor: (editorId) ->
     console.log 'editor id', editorId
+    editorId = editorId.editorId
     super
 
-    @subscribe this, 'core:move-up', => @scrollUp()
-    @subscribe this, 'core:move-down', => @scrollDown()
+    self = this
 
-    getEditor: () ->
+    getEditor = ->
       for editor in atom.workspace.getEditors()
         return editor if editor.id?.toString() is editorId.toString()
       null
+    editor = getEditor()
+
+    @subscribe this, 'core:move-up', => @scrollUp()
+    @subscribe this, 'core:move-down', => @scrollDown()
+    @subscribe editor.getBuffer(), 'changed', (val) ->
+     try
+       self.renderJSON JSON.parse(editor.buffer.getText())
 
   getTitle: ->
     "JSON"
 
   renderJSON: (jsonData) ->
+    @html '<div class="json-facet native-key-bindings"></div>'
+
     string = (val) ->
       $("<span class='string'>#{val}</span>")
     number = (val) ->
@@ -68,4 +78,7 @@ class JsonFacetView extends ScrollView
       el.append value(val)
       return el
 
-    this.append object(jsonData) # adds the entire object to the view
+    if jsonData instanceof Array
+      this.append array(jsonData)
+    else
+      this.append object(jsonData) # adds the entire object to the view
